@@ -1,0 +1,237 @@
+networks:
+  cluster_default:
+    external: true
+    name: "cluster_default"
+
+services:
+
+  cluster_core_1:
+
+    command:
+      - "catalina.sh"
+      - "run"
+
+    container_name: "cluster_core_1"
+
+    environment:
+      - "DHIS2_HOME=/opt/dhis2"
+      - "CATALINA_OPTS=-Dcontext.path='' -Dlog4j2.configurationFile=/opt/dhis2/log4j2.xml"
+      - "PATH=/usr/local/tomcat/bin:/opt/java/openjdk/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
+      - "LANGUAGE=en_US:en"
+      - "JAVA_HOME=/opt/java/openjdk"
+      - "CATALINA_HOME=/usr/local/tomcat"
+      - "LANG=en_US.UTF-8"
+      - "TOMCAT_MAJOR=9"
+      - "TOMCAT_VERSION=9.0.80"
+      - "LC_ALL=en_US.UTF-8"
+      - "LD_LIBRARY_PATH=/usr/local/tomcat/native-jni-lib"
+      - "TOMCAT_SHA512=24014441b0ccdd2dda238efa56e1a039476488943e6cf04f8a372a340a49dd21ce174ed68e2f5fcc43401e85fae6d00c5eac3d357653e91601737b6fa94476de"
+      - "TOMCAT_NATIVE_LIBDIR=/usr/local/tomcat/native-jni-lib"
+      - "JAVA_VERSION=jdk-11.0.20.1+1"
+      - "GPG_KEYS=48F8E69F6390C9F25CFEDCD268248959359E722B A9C5DF4D22E99998D9875A5110C01C5A2F6059E7 DCFD35E0BF8CA7344752DE8B6FB21E8933C60243"
+
+    expose:
+      - "8080/tcp"
+
+    hostname: "1c78316f10e7"
+
+    image: "dhis2/core:2.40.1"
+
+    ipc: "shareable"
+
+    labels:
+      DHIS2_BUILD_BRANCH: "2.40.1"
+      DHIS2_BUILD_REVISION: "19eb664cb3b5738a09b923955b29ac7bf6475224"
+      DHIS2_VERSION: "2.40.1"
+      com.docker.compose.config-hash: "61acaeffd9b2b3bd75c5cc0b053f068252b97051b64921c3f99fb5a11fec0292"
+      com.docker.compose.container-number: "1"
+      com.docker.compose.oneoff: "False"
+      com.docker.compose.project: "cluster"
+      com.docker.compose.project.config_files: "docker-compose.yml"
+      com.docker.compose.project.working_dir: "/opt/DHIS2-docker-compose/cluster"
+      com.docker.compose.service: "core"
+      com.docker.compose.version: "1.25.0"
+      org.opencontainers.image.ref.name: "ubuntu"
+      org.opencontainers.image.version: "22.04"
+
+    logging:
+      driver: "json-file"
+      options: {}
+
+    networks:
+      - "cluster_default"
+
+    restart: "always"
+
+    user: "65534"
+
+    volumes:
+      - "/opt/DHIS2-docker-compose/cluster/config/DHIS2_home/dhis.conf:/opt/dhis2/dhis.conf"
+      - "/opt/DHIS2-docker-compose/cluster/config/DHIS2_home/log4j2.xml:/opt/dhis2/log4j2.xml"
+      - "/opt/DHIS2-docker-compose/cluster/config/server.xml:/usr/local/tomcat/conf/server.xml"
+      - "cluster_home:/opt/dhis2"
+
+    working_dir: "/usr/local/tomcat"
+
+  cluster_db_1:
+
+    command:
+      - "postgres"
+      - "-c"
+      - "max_locks_per_transaction=100"
+
+    container_name: "cluster_db_1"
+
+    entrypoint:
+      - "docker-entrypoint.sh"
+
+    environment:
+      - "POSTGRES_DB=dhis2"
+      - "POSTGRES_USER=dhis"
+      - "POSTGRES_PASSWORD=dhis"
+      - "PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/lib/postgresql/12/bin"
+      - "GOSU_VERSION=1.16"
+      - "LANG=en_US.utf8"
+      - "PG_MAJOR=12"
+      - "PG_VERSION=12.16-1.pgdg110+1"
+      - "PGDATA=/var/lib/postgresql/data"
+      - "POSTGIS_MAJOR=3"
+      - "POSTGIS_VERSION=3.3.4+dfsg-1.pgdg110+1"
+
+    expose:
+      - "5432/tcp"
+
+    hostname: "730a52448c14"
+
+    image: "ghcr.io/baosystems/postgis:12-3.3"
+
+    ipc: "shareable"
+
+    labels:
+      com.docker.compose.config-hash: "ece604da80f9b64913511131b2dbe7ed90d9b40e1d23a18124bd7bdc7650df2b"
+      com.docker.compose.container-number: "1"
+      com.docker.compose.oneoff: "False"
+      com.docker.compose.project: "cluster"
+      com.docker.compose.project.config_files: "docker-compose.yml"
+      com.docker.compose.project.working_dir: "/opt/DHIS2-docker-compose/cluster"
+      com.docker.compose.service: "db"
+      com.docker.compose.version: "1.25.0"
+      maintainer: "PostGIS Project - https://postgis.net"
+      org.opencontainers.image.base.name: "docker.io/postgis/postgis:12-3.3"
+      org.opencontainers.image.created: "2023-08-15T05:20:36.505Z"
+      org.opencontainers.image.description: "Fork of upstream. No support provided."
+      org.opencontainers.image.licenses: "MIT"
+      org.opencontainers.image.revision: "9cec7c146f4fc3488d5678a452a3929162d3b8d9"
+      org.opencontainers.image.source: "https://github.com/baosystems/docker-postgis"
+      org.opencontainers.image.title: "postgis"
+      org.opencontainers.image.url: "https://github.com/baosystems/docker-postgis"
+      org.opencontainers.image.version: "12-3.3"
+
+    logging:
+      driver: "json-file"
+      options: {}
+
+    networks:
+      - "cluster_default"
+
+    restart: "always"
+
+    volumes:
+      - "cluster_datadb:/var/lib/postgresql/data"
+
+  cluster_gateway_1:
+
+    command:
+      - "forego"
+      - "start"
+      - "-r"
+
+    container_name: "cluster_gateway_1"
+
+    entrypoint:
+      - "/app/docker-entrypoint.sh"
+
+    environment:
+      - "PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
+      - "NGINX_VERSION=1.25.2"
+      - "PKG_RELEASE=1"
+      - "NJS_VERSION=0.8.0"
+      - "NGINX_PROXY_VERSION=1.3.1-40-g67ab97e"
+      - "DOCKER_GEN_VERSION=0.10.6"
+      - "DOCKER_HOST=unix:///tmp/docker.sock"
+
+    hostname: "cb1b45054109"
+
+    image: "jwilder/nginx-proxy:alpine"
+
+    ipc: "shareable"
+
+    labels:
+      com.docker.compose.config-hash: "948ee805a02abff2ea23c3f840cfd11909ef5e1af4ab9cbe48f7aba61f1e807f"
+      com.docker.compose.container-number: "1"
+      com.docker.compose.oneoff: "False"
+      com.docker.compose.project: "cluster"
+      com.docker.compose.project.config_files: "docker-compose.yml"
+      com.docker.compose.project.working_dir: "/opt/DHIS2-docker-compose/cluster"
+      com.docker.compose.service: "gateway"
+      com.docker.compose.version: "1.25.0"
+      maintainer: "NGINX Docker Maintainers <docker-maint@nginx.com>"
+      org.opencontainers.image.authors: "Nicolas Duchon <nicolas.duchon@gmail.com> (@buchdag), Jason Wilder"
+      org.opencontainers.image.created: "2023-11-06T00:03:00.529Z"
+      org.opencontainers.image.description: "Automated nginx proxy for Docker containers using docker-gen"
+      org.opencontainers.image.licenses: "MIT"
+      org.opencontainers.image.revision: "67ab97ed64875e9b671039903ce4c3a94d848b33"
+      org.opencontainers.image.source: "https://github.com/nginx-proxy/nginx-proxy"
+      org.opencontainers.image.title: "nginx-proxy"
+      org.opencontainers.image.url: "https://github.com/nginx-proxy/nginx-proxy"
+      org.opencontainers.image.version: "1.3.1-40-g67ab97e"
+
+    logging:
+      driver: "json-file"
+      options: {}
+
+    networks:
+      - "cluster_default"
+
+    ports:
+      - "8080:80/tcp"
+
+    restart: "always"
+
+    volumes:
+      - "/opt/DHIS2-docker-compose/cluster/.apps:/data/apps:ro"
+      - "/opt/DHIS2-docker-compose/cluster/config/nginx.conf:/etc/nginx/nginx.conf:ro"
+      - "/var/run/docker.sock:/tmp/docker.sock:ro"
+
+    working_dir: "/app"
+
+  findams:
+    container_name: "findams"
+    entrypoint:
+      - "java"
+      - "-jar"
+      - "target/findams-0.0.1-SNAPSHOT.jar"
+    environment:
+      - "PATH=/usr/local/openjdk-17/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
+      - "JAVA_HOME=/usr/local/openjdk-17"
+      - "LANG=C.UTF-8"
+      - "JAVA_VERSION=17.0.2"
+    hostname: "e508c2f0f6e7"
+    image: "intellisoftdev/findams:latest"
+    ipc: "private"
+    logging:
+      driver: "json-file"
+      options: {}
+    mac_address: "02:42:ac:11:00:02"
+    network_mode: "bridge"
+    ports:
+      - "8090:8090/tcp"
+    working_dir: "/findams_javabackend"
+
+version: "3.6"
+
+volumes:
+  cluster_datadb:
+    external: true
+  cluster_home:
+    external: true
