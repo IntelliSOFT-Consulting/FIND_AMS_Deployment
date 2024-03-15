@@ -1,0 +1,3 @@
+[submodule "FIND-AMS-Knowledge-hub"]
+	path = FIND-AMS-Knowledge-hub
+	url = https://github.com/IntelliSOFT-Consulting/FIND-AMS-Knowledge-hub.git

@@ -1,0 +1,77 @@
+version: "3.6"
+
+services:
+  core:
+    image: dhis2/core:2.40.3
+    restart: always
+    volumes:
+      - ${DHIS2_CORE_CONFIG:-./config/DHIS2_home/dhis.conf}:${DHIS2_HOME:-/DHIS2_home}/dhis.conf
+      - ./config/DHIS2_home/log4j2.xml:${DHIS2_HOME:-/DHIS2_home}/log4j2.xml
+      - ./config/server.xml:/usr/local/tomcat/conf/server.xml
+      - home:${DHIS2_HOME:-/DHIS2_home}
+    environment:
+      DHIS2_HOME: ${DHIS2_HOME:-/DHIS2_home}
+      CATALINA_OPTS: "-Dcontext.path='${DHIS2_CORE_CONTEXT_PATH:-}' \
+              -Dlog4j2.configurationFile=${DHIS2_HOME:-/DHIS2_home}/log4j2.xml"
+    depends_on:
+      - "db"
+  db:
+    image: ghcr.io/baosystems/postgis:12-3.3
+    command: "postgres -c max_locks_per_transaction=100"
+    restart: always
+    volumes:
+      - datadb:/var/lib/postgresql/data
+    environment:
+      POSTGRES_DB: dhis2
+      POSTGRES_USER: dhis
+      POSTGRES_PASSWORD: dhis
+    ports:
+      - "5433:5432"
+  gateway:
+    image: "jwilder/nginx-proxy:alpine"
+    restart: always
+    ports:
+      - "${DHIS2_CORE_PORT}:80"
+    volumes:
+      - ./config/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./.apps:/data/apps:ro
+      - /var/run/docker.sock:/tmp/docker.sock:ro
+  findams:
+    container_name: "findams"
+    entrypoint:
+      - "java"
+      - "-jar"
+      - "findams-0.0.1-SNAPSHOT.jar"
+    environment:
+      - "PATH=/usr/local/openjdk-17/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
+      - "JAVA_HOME=/usr/local/openjdk-17"
+      - "LANG=C.UTF-8"
+      - "JAVA_VERSION=17.0.2"
+    hostname: "f909d8f56811"
+    image: "intellisoftdev/findams:latest"
+    ipc: "private"
+    logging:
+      driver: "json-file"
+      options: {}
+    mac_address: "02:42:ac:11:00:02"
+    ports:
+      - "8090:8090"
+    working_dir: "/findams_javabackend"
+
+  knowledge-hub:
+    container_name: "knowledge-hub"
+    build:
+      context: ./FIND-AMS-Knowledge-hub
+      dockerfile: ./Docker/Dockerfile.prod
+    restart: unless-stopped
+    environment:
+      - NODE_ENV=production
+    env_file:
+      - ./FIND-AMS-Knowledge-hub/.env
+    ports:
+      - "3000:3000"
+
+
+volumes:
+  datadb:
+  home:
