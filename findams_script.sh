@@ -12,16 +12,14 @@ function check_command() {
 check_command docker
 check_command docker compose
 
-# ./scripts/seed.sh ./db/db.sql.gz
+./scripts/seed.sh ./db/ams.sql
 
 
 # Run the application
 ./scripts/start.sh
 
-# Wait for the application to start(until localhost:8080 is available)
-while ! nc -z localhost 8080; do
-  sleep 1
-done
+# wait for 2 minutes
+sleep 120
 # Run the cron job
 ./scripts/cron.sh
 
