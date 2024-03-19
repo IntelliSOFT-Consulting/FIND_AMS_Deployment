@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # the directory to check
-dir="/home/ams/test-whonet"
+dir="/home/ams/sambashare"
 
 # processed is a directory inside dir
 processed="$dir/processed"
