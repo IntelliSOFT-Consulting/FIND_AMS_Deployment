@@ -1,0 +1,11 @@
+[Unit]
+Description=Setup IP
+After=network.target  # Ensure network is up before running your script
+
+[Service]
+Type=simple
+User=root
+ExecStart=sudo /etc/set-ip.sh
+
+[Install]
+WantedBy=multi-user.target
