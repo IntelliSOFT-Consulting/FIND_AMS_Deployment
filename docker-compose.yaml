@@ -47,7 +47,6 @@ services:
       - "JAVA_HOME=/usr/local/openjdk-17"
       - "LANG=C.UTF-8"
       - "JAVA_VERSION=17.0.2"
-    network_mode: "host"
     image: "intellisoftdev/findams:latest"
     logging:
       driver: "json-file"
