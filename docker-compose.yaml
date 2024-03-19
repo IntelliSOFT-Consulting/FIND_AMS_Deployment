@@ -48,6 +48,7 @@ services:
       - "LANG=C.UTF-8"
       - "JAVA_VERSION=17.0.2"
     hostname: "f909d8f56811"
+    network_mode: "host"
     image: "intellisoftdev/findams:latest"
     ipc: "private"
     logging:
