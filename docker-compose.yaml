@@ -49,12 +49,11 @@ services:
       - "JAVA_VERSION=17.0.2"
     network_mode: "host"
     image: "intellisoftdev/findams:latest"
-    ipc: "private"
     logging:
       driver: "json-file"
       options: {}
-    # ports:
-    #   - "8090:8090"
+    ports:
+      - "8090:8090"
     working_dir: "/findams_javabackend"
 
   knowledge-hub:
