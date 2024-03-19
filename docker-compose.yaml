@@ -54,7 +54,6 @@ services:
     logging:
       driver: "json-file"
       options: {}
-    mac_address: "02:42:ac:11:00:02"
     ports:
       - "8090:8090"
     working_dir: "/findams_javabackend"
