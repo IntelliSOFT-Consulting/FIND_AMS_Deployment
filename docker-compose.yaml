@@ -53,8 +53,8 @@ services:
     logging:
       driver: "json-file"
       options: {}
-    ports:
-      - "8090:8090"
+    # ports:
+    #   - "8090:8090"
     working_dir: "/findams_javabackend"
 
   knowledge-hub:

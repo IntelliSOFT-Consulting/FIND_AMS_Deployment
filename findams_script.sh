@@ -19,7 +19,7 @@ check_command docker compose
 
 # wait for 2 minutes
 sleep 60
-cd /opt/FIND-AMS-DHIS2-app && sudo yarn build && sudo yarn deploy "http://localhost:8080" --username "admin" --password "district"
+cd /opt/FIND-AMS-DHIS2-app && sudo yarn build && sudo yarn deploy "http://localhost:80" --username "admin" --password "district"
 
 sudo cp ./config/whonet-watcher.service /etc/systemd/system/whonet-watcher.service
 sudo cp ./scripts/watcher.sh /etc/watcher.sh
